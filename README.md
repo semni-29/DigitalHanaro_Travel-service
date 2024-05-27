@@ -57,7 +57,7 @@
 	|🩷김정현|팀원|데이터분석|[@kjhz2](https://github.com/kjhz2)|
 	|🤍박정우|팀원|데이터분석|[@weturnit42](https://github.com/weturnit42)|
 	|🖤전민재|팀원|데이터분석|[@espressotheblack](https://github.com/espressotheblack)|
-	|💛현세민|팀원|데이터분석|[@SeminHyun](https://github.com/SeminHyun)|
+	|💛현세민|팀원|데이터분석|[@semni-29](https://github.com/semni-29)|
 
 <br><br>
 
