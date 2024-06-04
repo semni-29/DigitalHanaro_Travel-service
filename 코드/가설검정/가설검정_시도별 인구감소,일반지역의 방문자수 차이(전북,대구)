@@ -1,0 +1,256 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 11,
+   "id": "1c2d128c",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import os\n",
+    "import pandas as pd\n",
+    "import plotly.express as px\n",
+    "import scipy.stats as stats"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "id": "fdc52e20",
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/html": [
+       "<div>\n",
+       "<style scoped>\n",
+       "    .dataframe tbody tr th:only-of-type {\n",
+       "        vertical-align: middle;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe tbody tr th {\n",
+       "        vertical-align: top;\n",
+       "    }\n",
+       "\n",
+       "    .dataframe thead th {\n",
+       "        text-align: right;\n",
+       "    }\n",
+       "</style>\n",
+       "<table border=\"1\" class=\"dataframe\">\n",
+       "  <thead>\n",
+       "    <tr style=\"text-align: right;\">\n",
+       "      <th></th>\n",
+       "      <th>기준년월</th>\n",
+       "      <th>방문자수</th>\n",
+       "      <th>전년동월방문자수</th>\n",
+       "      <th>방문자수증감률</th>\n",
+       "    </tr>\n",
+       "  </thead>\n",
+       "  <tbody>\n",
+       "    <tr>\n",
+       "      <th>0</th>\n",
+       "      <td>202301</td>\n",
+       "      <td>2121029</td>\n",
+       "      <td>1933767</td>\n",
+       "      <td>9.7</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>1</th>\n",
+       "      <td>202302</td>\n",
+       "      <td>1983801</td>\n",
+       "      <td>1698919</td>\n",
+       "      <td>16.8</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>2</th>\n",
+       "      <td>202303</td>\n",
+       "      <td>2506595</td>\n",
+       "      <td>2155911</td>\n",
+       "      <td>16.3</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>3</th>\n",
+       "      <td>202304</td>\n",
+       "      <td>2113724</td>\n",
+       "      <td>2129225</td>\n",
+       "      <td>-0.7</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>4</th>\n",
+       "      <td>202305</td>\n",
+       "      <td>2339591</td>\n",
+       "      <td>2447515</td>\n",
+       "      <td>-4.4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>...</th>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "      <td>...</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>79</th>\n",
+       "      <td>202308</td>\n",
+       "      <td>2340891</td>\n",
+       "      <td>2264499</td>\n",
+       "      <td>3.4</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>80</th>\n",
+       "      <td>202309</td>\n",
+       "      <td>2463468</td>\n",
+       "      <td>2423153</td>\n",
+       "      <td>1.7</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>81</th>\n",
+       "      <td>202310</td>\n",
+       "      <td>2456619</td>\n",
+       "      <td>2403761</td>\n",
+       "      <td>2.2</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>82</th>\n",
+       "      <td>202311</td>\n",
+       "      <td>2066919</td>\n",
+       "      <td>2046251</td>\n",
+       "      <td>1.0</td>\n",
+       "    </tr>\n",
+       "    <tr>\n",
+       "      <th>83</th>\n",
+       "      <td>202312</td>\n",
+       "      <td>2154319</td>\n",
+       "      <td>1694408</td>\n",
+       "      <td>27.1</td>\n",
+       "    </tr>\n",
+       "  </tbody>\n",
+       "</table>\n",
+       "<p>84 rows × 4 columns</p>\n",
+       "</div>"
+      ],
+      "text/plain": [
+       "      기준년월     방문자수  전년동월방문자수  방문자수증감률\n",
+       "0   202301  2121029   1933767      9.7\n",
+       "1   202302  1983801   1698919     16.8\n",
+       "2   202303  2506595   2155911     16.3\n",
+       "3   202304  2113724   2129225     -0.7\n",
+       "4   202305  2339591   2447515     -4.4\n",
+       "..     ...      ...       ...      ...\n",
+       "79  202308  2340891   2264499      3.4\n",
+       "80  202309  2463468   2423153      1.7\n",
+       "81  202310  2456619   2403761      2.2\n",
+       "82  202311  2066919   2046251      1.0\n",
+       "83  202312  2154319   1694408     27.1\n",
+       "\n",
+       "[84 rows x 4 columns]"
+      ]
+     },
+     "execution_count": 7,
+     "metadata": {},
+     "output_type": "execute_result"
+    }
+   ],
+   "source": [
+    "df11 = pd.read_csv('전북일반지역.csv',encoding = 'cp949')\n",
+    "df12 = pd.read_csv('전북인구감소지역.csv')\n",
+    "df11"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 18,
+   "id": "ffe0667d",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "NormaltestResult(statistic=9.047825206742372, pvalue=0.010846502476364393)\n",
+      "NormaltestResult(statistic=5.155203030272687, pvalue=0.07595596495258983)\n",
+      "RanksumsResult(statistic=5.938459911664722, pvalue=2.877119829103961e-09)\n",
+      "대립가설 참 유의미한 차이가 존재한다.\n",
+      "4753145.666666667 4907812.5\n",
+      "1999785.375 2003184.5\n"
+     ]
+    }
+   ],
+   "source": [
+    "print( stats.normaltest(df11['방문자수']) )\n",
+    "print( stats.normaltest(df12['방문자수']) )\n",
+    "print( stats.ranksums(df11['방문자수'], df12['방문자수']))\n",
+    "print(\"대립가설 참 유의미한 차이가 존재한다.\")\n",
+    "print( df11['방문자수'].mean(), df11['방문자수'].median() ) # 일반지역\n",
+    "print( df12['방문자수'].mean(), df12['방문자수'].median() ) # 인구감소지역"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 19,
+   "id": "9c821955",
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "df21 = pd.read_csv('대구일반지역.csv',encoding = 'cp949')\n",
+    "df22 = pd.read_csv('대구인구감소지역.csv',encoding = 'cp949')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 17,
+   "id": "ea69e611",
+   "metadata": {},
+   "outputs": [
+    {
+     "name": "stdout",
+     "output_type": "stream",
+     "text": [
+      "NormaltestResult(statistic=9.047825206742372, pvalue=0.010846502476364393)\n",
+      "NormaltestResult(statistic=5.155203030272687, pvalue=0.07595596495258983)\n",
+      "RanksumsResult(statistic=5.938459911664722, pvalue=2.877119829103961e-09)\n",
+      "4753145.666666667 4907812.5\n",
+      "1999785.375 2003184.5\n"
+     ]
+    }
+   ],
+   "source": [
+    "print( stats.normaltest(df21['방문자수']) )\n",
+    "print( stats.normaltest(df22['방문자수']) )\n",
+    "print( stats.ranksums(df21['방문자수'], df22['방문자수']))\n",
+    "print(\"대립가설 참 유의미한 차이가 존재한다.\")\n",
+    "print( df21['방문자수'].mean(), df21['방문자수'].median() ) # 일반지역\n",
+    "print( df22['방문자수'].mean(), df22['방문자수'].median() ) # 인구감소지역"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "id": "ec32319f",
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3 (ipykernel)",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.11.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 5
+}
